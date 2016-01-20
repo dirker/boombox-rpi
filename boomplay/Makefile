@@ -16,3 +16,6 @@ boomplay: $(obj) Makefile
 %.o: %.c Makefile
 	@echo 'CC '$@
 	@gcc $(CFLAGS) -c -o $@ $<
+
+clean:
+	rm -f boomplay *.o
