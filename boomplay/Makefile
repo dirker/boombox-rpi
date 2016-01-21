@@ -1,3 +1,9 @@
+ifeq ($(V),1)
+  Q =
+else
+  Q = @
+endif
+
 src := $(wildcard *.c)
 obj := $(src:%.c=%.o)
 
@@ -11,11 +17,11 @@ LDFLAGS += $(shell pkg-config libmpg123 --libs)
 
 boomplay: $(obj) Makefile
 	@echo 'LD '$@
-	@gcc $(LDFLAGS) $(obj) -o $@
+	$(Q)gcc $(LDFLAGS) $(obj) -o $@
 
 %.o: %.c Makefile
 	@echo 'CC '$@
-	@gcc $(CFLAGS) -c -o $@ $<
+	$(Q)gcc $(CFLAGS) -c -o $@ $<
 
 clean:
 	rm -f boomplay *.o
