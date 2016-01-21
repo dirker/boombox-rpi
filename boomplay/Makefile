@@ -17,7 +17,7 @@ LDFLAGS += $(shell pkg-config libmpg123 --libs)
 
 boomplay: $(obj) Makefile
 	@echo 'LD '$@
-	$(Q)gcc $(LDFLAGS) $(obj) -o $@
+	$(Q)gcc $(obj) $(LDFLAGS) -o $@
 
 %.o: %.c Makefile
 	@echo 'CC '$@
