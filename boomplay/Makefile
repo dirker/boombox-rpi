@@ -15,13 +15,18 @@ LDFLAGS += $(shell sdl2-config --libs)
 CFLAGS += $(shell pkg-config libmpg123 --cflags)
 LDFLAGS += $(shell pkg-config libmpg123 --libs)
 
+depfile = .$@.d
+c_flags = -MD -MF $(depfile) -MT $@ $(CFLAGS)
+
 boomplay: $(obj) Makefile
 	@echo 'LD '$@
 	$(Q)gcc $(obj) $(LDFLAGS) -o $@
 
 %.o: %.c Makefile
 	@echo 'CC '$@
-	$(Q)gcc $(CFLAGS) -c -o $@ $<
+	$(Q)gcc $(c_flags) -c -o $@ $<
 
 clean:
 	rm -f boomplay *.o
+
+-include $(wildcard .*.d)
