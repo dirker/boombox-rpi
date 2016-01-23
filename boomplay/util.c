@@ -15,6 +15,20 @@ void die(const char *fmt, ...)
   exit(EXIT_FAILURE);
 }
 
+ssize_t readline(char ** restrict linep, size_t * restrict linecapp, FILE * restrict stream)
+{
+  ssize_t ret;
+
+  ret = getline(linep, linecapp, stream);
+  if (ret < 0)
+    return ret;
+
+  /* remove trailing newline */
+  (*linep)[--ret] = '\0';
+
+  return ret;
+}
+
 void *xcalloc(size_t count, size_t size)
 {
   void *ret = calloc(count, size);
