@@ -7,7 +7,7 @@
 #define ARRAY_SIZE(x) (sizeof(x)/sizeof((x)[0]))
 
 void die(const char *fmt, ...);
-ssize_t readline(char ** restrict linep, size_t * restrict linecapp, FILE * restrict stream);
+ssize_t readline(char **linep, size_t *linecapp, FILE *stream);
 void *xmalloc(size_t size);
 void *xcalloc(size_t count, size_t size);
 

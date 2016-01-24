@@ -15,7 +15,7 @@ void die(const char *fmt, ...)
   exit(EXIT_FAILURE);
 }
 
-ssize_t readline(char ** restrict linep, size_t * restrict linecapp, FILE * restrict stream)
+ssize_t readline(char **linep, size_t *linecapp, FILE *stream)
 {
   ssize_t ret;
 
