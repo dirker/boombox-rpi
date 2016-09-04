@@ -27,6 +27,6 @@ boomplay: $(obj) Makefile
 	$(Q)gcc $(c_flags) -c -o $@ $<
 
 clean:
-	rm -f boomplay *.o
+	rm -f boomplay *.o .*.d
 
 -include $(wildcard .*.d)

@@ -13,5 +13,8 @@ int player_wait(player_t *player);
 int player_pause(player_t *player);
 int player_forcepause(player_t *player);
 int player_forceresume(player_t *player);
+int player_stop(player_t *player);
+int player_volume_set(player_t *player, int volume);
+int player_volume_get(player_t *player);
 
 #endif /* __PLAYER_H */

@@ -44,7 +44,7 @@ void playlist_wipe(void)
 }
 
 const char *playlist_next(void) {
-  if (pl.pos == pl.num_entries - 1)
+  if (pl.pos == pl.num_entries)
     return NULL;
 
   return pl.entries[pl.pos++];

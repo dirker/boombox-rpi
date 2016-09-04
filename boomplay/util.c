@@ -33,7 +33,7 @@ void *xcalloc(size_t count, size_t size)
 {
   void *ret = calloc(count, size);
   if (!ret)
-    die("calloc");
+    die("calloc\n");
   return ret;
 }
 
@@ -41,6 +41,6 @@ void *xmalloc(size_t size)
 {
   void *ret = malloc(size);
   if (!ret)
-    die("malloc");
+    die("malloc\n");
   return ret;
 }

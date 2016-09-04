@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <SDL.h>
 #include <mpg123.h>
 
@@ -45,11 +46,7 @@ player_t *player_new(void)
 
 void player_free(player_t *player)
 {
-  /* FIXME:
-   *  - stop if playing
-   *  - ensure done
-   */
-
+  player_stop(player);
   mpg123_delete(player->mh);
   completion_free(player->done);
   free(player);
@@ -61,7 +58,7 @@ int player_loadfile(player_t *player, const char *fname)
 
   err = mpg123_open(player->mh, fname);
   if (err != MPG123_OK) {
-    die("mpg123 open");
+    die("mpg123_open\n");
   }
 
   return 0;
@@ -83,7 +80,7 @@ int player_play(player_t *player)
 
   err = mpg123_getformat(player->mh, &rate, &channels, &encoding);
   if (err != MPG123_OK) {
-    die("mpg123 getformat");
+    die("mpg123_getformat\n");
   }
 
   mpg123_format_none(player->mh);
@@ -111,24 +108,79 @@ int player_play(player_t *player)
 int player_wait(player_t *player)
 {
   wait_for_completion(player->done);
-  SDL_CloseAudioDevice(player->dev);
+
+  if (player->dev) {
+    SDL_CloseAudioDevice(player->dev);
+    player->dev = 0;
+  }
+
   return 0;
 }
 
 int player_pause(player_t *player)
 {
-  /* TODO */
+  assert(player->dev);
+
+  SDL_AudioStatus status = SDL_GetAudioDeviceStatus(player->dev);
+
+  switch (status) {
+  case SDL_AUDIO_PLAYING:
+    SDL_PauseAudioDevice(player->dev, 1);
+    break;
+  case SDL_AUDIO_PAUSED:
+    SDL_PauseAudioDevice(player->dev, 0);
+    break;
+  default:
+    break;
+  }
+
   return 0;
 }
 
 int player_forcepause(player_t *player)
 {
-  /* TODO */
+  assert(player->dev);
+
+  SDL_PauseAudioDevice(player->dev, 1);
   return 0;
 }
 
 int player_forceresume(player_t *player)
 {
-  /* TODO */
+  assert(player->dev);
+
+  SDL_PauseAudioDevice(player->dev, 0);
+  return 0;
+}
+
+int player_stop(player_t *player)
+{
+  if (player->dev) {
+    SDL_CloseAudioDevice(player->dev);
+    player->dev = 0;
+  }
+
+  complete(player->done);
+  return 0;
+}
+
+int player_volume_set(player_t *player, int volume)
+{
+  assert(player->mh);
+
+  double vol = volume / 100.f;
+  mpg123_volume(player->mh, vol);
+  return 0;
+}
+
+int player_volume_get(player_t *player)
+{
+  assert(player->mh);
+
+  double base, really, rva_db;
+  mpg123_getvolume(player->mh, &base, &really, &rva_db);
+
+  printf("%s(): base = %f, really = %f, rva_db = %f\n", __func__, base, really, rva_db);
+
   return 0;
 }
