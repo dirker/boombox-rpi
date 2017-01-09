@@ -1,0 +1,52 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "brcm,bcm2708";
+
+	fragment@0 {
+		target = <&gpio>;
+		__overlay__ {
+			pinctrl-names = "default";
+			pinctrl-0 = <&rotary0_pins>, <&key_nextsong_pin>;
+
+			rotary0_pins: rotary0_pins {
+				brcm,pins = <4 5>;
+				brcm,function = <0>; /* input */
+				brcm,pull = <1>; /* down */
+			};
+
+			key_nextsong_pin: key_nextsong_pin {
+				brcm,pins = <6>;
+				brcm,function = <0>; /* input */
+				brcm,pull = <1>; /* down */
+			};
+		};
+	};
+
+	fragment@1 {
+		target-path = "/";
+		__overlay__ {
+			rotary0 {
+				compatible = "rotary-encoder";
+				gpios = <&gpio 4 0>, <&gpio 5 0>;
+				rotary-encoder,relative-axis;
+			};
+		};
+	};
+
+	fragment@2 {
+		target-path = "/";
+		__overlay__ {
+			gpio_keys {
+				compatible = "gpio-keys";
+
+				key_nextsong {
+					label = "GPIO Key Next Song";
+					gpios = <&gpio 6 0>;
+					linux,code = <163>; /* KEY_NEXTSONG */
+				};
+			};
+		};
+	};
+};
