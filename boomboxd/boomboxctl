@@ -1,0 +1,44 @@
+#!/usr/bin/env python
+
+import sys
+import struct
+import binascii
+
+EV_KEY = 1
+EV_REL = 2
+
+KEY_NEXTSONG = 163
+REL_X = 0
+
+def genev(typ, code, value):
+	buf = struct.pack("@QQHHi", 0, 0, typ, code, value)
+	with open("evdev.pipe", "wb") as f:
+		f.write(buf)
+
+def gentag(tag):
+	if len(tag) != 10:
+		raise ValueError('tag length must be 10')
+
+	chksum = 0
+	bytes = binascii.unhexlify(tag)
+
+	for b in struct.unpack("5B", bytes):
+		chksum ^= b
+	chksum = "%02X" % chksum
+	with open("rfid.pipe", "wb") as f:
+		f.write("\x02" + tag + chksum + "\r\n\x03")
+
+def main():
+	if len(sys.argv) < 2:
+		raise ValueError('need at least 2 arguments')
+
+	cmd = sys.argv[1]
+
+	if cmd == "volu":
+		genev(EV_REL, REL_X, 1)
+	if cmd == "vold":
+		genev(EV_REL, REL_X, -1)
+	if cmd == "tag":
+		gentag(sys.argv[2])
+
+main()
