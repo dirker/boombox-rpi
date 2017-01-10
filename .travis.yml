@@ -1,11 +1,10 @@
-sudo: required
-dist: trusty
+language: go
 
-language: c
+go:
+  - 1.7.x
 
-before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq libsdl2-dev libmpg123-dev
+# override standard go get step
+install: true
 
 script:
-  - cd boomplay && make
+  - cd boomboxd && make
