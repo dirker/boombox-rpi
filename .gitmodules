@@ -1,3 +1,6 @@
 [submodule "boomboxd/vendor/github.com/tarm/serial"]
 	path = boomboxd/vendor/github.com/tarm/serial
 	url = https://github.com/tarm/serial
+[submodule "buildroot"]
+	path = buildroot
+	url = git://git.busybox.net/buildroot
